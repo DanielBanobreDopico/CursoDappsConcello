@@ -1,0 +1,17 @@
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    color:orangered;
+}
+
+#areaTexto, #vistaTexto {
+    width: 30em;
+    height: 15em;
+    padding: 1em;
+    margin: 0.5em;
+}
