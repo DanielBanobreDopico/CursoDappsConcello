@@ -65,8 +65,12 @@
 ## Firma offline
     * Airgap
     
-## Remix
+## Solidity
+
+```bash
 npm init -y
+npm install solc
+
 mkdir contracts
 mkdir test
 touch compile.js
@@ -74,29 +78,37 @@ touch deploy.js
 
 cd contracts
 touch storageName.sol
+```
 
-    #storageName.sol
-    pragma solidity >= 0.8.0;
+Editamos storageName.sol
 
-    contract StorageName {
-        
-        string name;
-        
-        constructor(string memory name_) {
-            name = name_;
-        }
-        
-        function setName (string memory name_) public {
-            name = name_;
-        }
-        
-        function getName () public view returns(string memory) {
-            return name;
-        }
-        
+```solidity
+// SPDX-License-Identifier: UNLICENSED
+
+pragma solidity >= 0.8.0;
+
+contract StorageName {
+    
+    string name;
+    
+    constructor(string memory name_) {
+        name = name_;
     }
+    
+    function setName (string memory name_) public {
+        name = name_;
+    }
+    
+    function getName () public view returns(string memory) {
+        return name;
+    }
+    
+}
+```
 
-    #compile.js
+Editamos compile.js
+
+```javascript
     const path = require('path');
     const fs = require('fs');
     const solc = require('solc');
@@ -124,6 +136,10 @@ touch storageName.sol
     
     module.exports = output.contracts['storageName.sol'].StorageName
     
-    
-npm install solc
+```
+
+Podemos descomentar las lineas de console log y ver las salidas ejecutando compile.js
+
+```bash
 node compile.js
+```
