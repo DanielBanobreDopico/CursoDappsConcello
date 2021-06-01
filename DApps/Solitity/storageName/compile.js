@@ -27,3 +27,4 @@ const output = JSON.parse(solc.compile(JSON.stringify(input)));
 
 //console.log(output);
 console.log(output.contracts['storageName.sol'].StorageName.abi);
+console.log(output.contracts['storageName.sol'].StorageName.evm.bytecode.object);
