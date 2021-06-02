@@ -143,3 +143,40 @@ Podemos descomentar las lineas de console log y ver las salidas ejecutando compi
 ```bash
 node compile.js
 ```
+### Tests
+```bash
+cd ..
+npm install assert
+npm install ganache-cli
+npm install web3
+npm install mocha
+# o npm install ethers como alternativa liviana
+```
+Editamos package.json y editamos la linea 'tests' para que indique mocha.
+
+```JSON
+{
+  "name": "storagename",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "solc": "^0.8.4"
+  }
+}
+```
+
+```bash
+cd ../test
+touch myContract.test.js
+```
+
+```javascript
+
+```
