@@ -67,20 +67,21 @@
     
 ## Solidity
 
+### Esquema del proyecto
+
 ```bash
 npm init -y
-npm install solc
 
 mkdir contracts
 mkdir test
 touch compile.js
 touch deploy.js
-
-cd contracts
-touch storageName.sol
+touch contracts/storageName.sol
+touch test/myContract.test.js
 ```
+### Fuente del smart contract
 
-Editamos storageName.sol
+Editamos contracts/storageName.sol
 
 ```solidity
 // SPDX-License-Identifier: UNLICENSED
@@ -104,6 +105,14 @@ contract StorageName {
     }
     
 }
+```
+
+### Compilación del smart contract
+
+Instalamos el módulo necesario.
+
+```bash
+npm install solc
 ```
 
 Editamos compile.js
@@ -134,6 +143,10 @@ Editamos compile.js
     
     const output = JSON.parse(solc.compile(JSON.stringify(input)));
     
+    //console.log(output);
+    //console.log(output.contracts['storageName.sol'].StorageName.abi);
+    //console.log(output.contracts['storageName.sol'].StorageName.evm.bytecode.object);
+
     module.exports = output.contracts['storageName.sol'].StorageName
     
 ```
@@ -144,8 +157,10 @@ Podemos descomentar las lineas de console log y ver las salidas ejecutando compi
 node compile.js
 ```
 ### Tests
+
+Instalamos los módulos necesarios.
+
 ```bash
-cd ..
 npm install assert
 npm install ganache-cli
 npm install web3
@@ -171,12 +186,7 @@ Editamos package.json y editamos la linea 'tests' para que indique mocha.
   }
 }
 ```
-
-```bash
-cd ../test
-touch myContract.test.js
-```
-Editamos myContract.test.js
+Editamos test/myContract.test.js
 
 ```javascript
 const assert = require('assert');
@@ -216,5 +226,19 @@ describe('StorageName', () => {
         assert.strictEqual(name, 'Tania');
     });
 })
+
+```
+### Deploy
+
+Muchos de los módulos necesarios ya han sido instalados para la realización de los tests. Añadimos los faltantes.
+
+```bash
+npm install truffle-hdwallet-provider
+```
+Necesitamos una cuenta para hacer el deploy. Podemos hacerlo en la herramienta online [https://iancoleman.io/bip39/](https://iancoleman.io/bip39/) para crear nuestra semilla o frase de recuperación. Si queremos hacerlos de forma más segura, podemos hacerlo con la versión offline: [https://github.com/iancoleman/bip39#standalone-offline-version](https://github.com/iancoleman/bip39#standalone-offline-version)
+
+Editamos deploy.js
+
+```javascript
 
 ```
