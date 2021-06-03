@@ -6,6 +6,6 @@ const compile = require('compile');
 const abi = compile.abi;
 const bytecode = compile.evm.bytecode.object;
 
-const proveder = new HDWalletProvider(
+const provider = new HDWalletProvider(
     
 );

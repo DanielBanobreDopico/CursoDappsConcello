@@ -242,3 +242,58 @@ Editamos deploy.js
 ```javascript
 
 ```
+
+### Apuntes Solidity
+
+* Variables fuertemente tipadas: hemos de decir que tipo de valor almacenamos en cada variable
+* No existe undefined
+* ';' obligatorio al final de la instrucción
+* Las variables declaradas fuera de una función son el "estado" del contrato y son los valores que serán almacenados y conservados.
+
+Esqueleto general de un smart contract.
+```solidity
+// SPDX-Licenses-Identifier: UNLISENCED
+
+pragma solidity >= 0.8.0;
+
+contract MyContract {
+
+    // Declaramos las variables de estado del contrato
+    
+    constructor ( argumentos ) {
+        
+        // Inicializamos los valores del estado del contrato
+        // o cualquier otro proceso inicial.
+
+    }
+
+    // Declaramos funciones
+}
+
+```
+Ejemplo:
+```solidity
+// SPDX-License-Identifier: UNLISENCED
+
+pragma solidity >= 0.8.0;
+
+contract MyContract {
+    address owner;
+    uint16 valorInicial;
+    string public company;
+    uint8[] publicmiLista;
+    
+    constructor ( uint8 valor, string memory companyName ) {
+        owner = msg.sender;
+        valorInicial = valor * 2;
+        company = companyName;
+    }
+    
+    function setToMiLista (uint8 numero) public {
+        miLista.push(numero);
+    }
+    
+}
+```
+* [Tipos de datos de Solidity](https://docs.soliditylang.org/en/v0.8.0/types.html)
+* [Array, lista en Solidity](https://www.geeksforgeeks.org/solidity-arrays/)
