@@ -272,8 +272,7 @@ contract MyContract {
 
 ```
 Ejemplo:
-```solidity
-// SPDX-License-Identifier: UNLISENCED
+```// SPDX-License-Identifier: UNLISENCED
 
 pragma solidity >= 0.8.0;
 
@@ -281,7 +280,11 @@ contract MyContract {
     address owner;
     uint16 valorInicial;
     string public company;
-    uint8[] publicmiLista;
+    uint8[] public miLista;
+    
+    mapping(address => uint256) balances;
+    mapping(address => mapping(address => bool)) permisos;
+    mapping(address => string[]) vehiculos;
     
     constructor ( uint8 valor, string memory companyName ) {
         owner = msg.sender;
@@ -293,7 +296,66 @@ contract MyContract {
         miLista.push(numero);
     }
     
+    //------------------------------------------------------------
+    
+    function establecerBalance(address address_, uint256 cantidad_) public {
+        balances[address_] = cantidad_;
+    }
+    
+    function establecerMiBalance(uint256 cantidad_) public {
+        balances[msg.sender] = cantidad_;
+    }
+    
+    function consultarBalance(address address_) public view returns(uint256) {
+        return balances[address_];
+    }
+    
+    function miBalance() public view returns(uint256) {
+        return balances[msg.sender];
+    }
+
+    //-------------------------------------------------------------
+        
+    function establecePermisos(address propietario_, address autorizado_, bool permiso) public {
+        permisos[propietario_][autorizado_] = permiso;
+    }
+    
+    function consultarPermisos(address propietario_, address autorizado_) public view returns (bool) {
+        return permisos[propietario_][autorizado_];
+    }
+    
+    function autorizarCuenta(address autorizado_) public {
+        permisos[msg.sender][autorizado_] = true;
+    }
+    
+    function desautorizarCuenta(address autorizado_) public {
+        permisos[msg.sender][autorizado_] = false;
+    }
+    
+    //-------------------------------------------------------------
+        
+    function asignarVehiculo(address address_, string memory matricula_) public {
+        vehiculos[address_].push(matricula_);
+    }
+    
+    function verVehiculos(address address_) public view returns (string[] memory) {
+        return vehiculos[address_];
+    }
+    
+    function borrarMatriculaEnPosicion(address address_, uint8 idx_) public {
+        delete vehiculos[address_][idx_];
+    }
+    
+    //-------------------------------------------------------------
+    
 }
 ```
 * [Tipos de datos de Solidity](https://docs.soliditylang.org/en/v0.8.0/types.html)
 * [Array, lista en Solidity](https://www.geeksforgeeks.org/solidity-arrays/)
+* [Maps](https://medium.com/upstate-interactive/mappings-in-solidity-explained-in-under-two-minutes-ecba88aff96e)
+#### Notas sobre Arrays y Maps
+La ejecución de smart contracts tiene un coste. Recorrer cada uno de los elementos de un array con muchos elementos puede ser muy costoso.
+
+En Solidity los maps suelen ser emplados para crear índices que nos permitan localizar de forma inmediata información almacenada en un array.
+
+Si solicitamos un valor de un map para una clave que no existe, no responderá con el tipo de valor 'vacío' para ese tipo de dato: false, 0...
