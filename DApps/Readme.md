@@ -288,15 +288,25 @@ pragma solidity >= 0.8.0;
 
 contract MyContract {
     address owner;
-    uint16 valorInicial;
+    uint256 valorInicial;
     string public company;
     uint8[] public miLista;
     
     mapping(address => uint256) balances;
     mapping(address => mapping(address => bool)) permisos;
-    mapping(address => string[]) vehiculos;
+    mapping(address => string[]) vehiculosPoseidos;
     
-    constructor ( uint8 valor, string memory companyName ) {
+    struct Vehiculo {
+        string marca;
+        uint8 kilometros;
+        string matricula;
+        uint8 potencia;
+    }
+    
+    Vehiculo[] public vehiculos;
+    mapping(string => uint256) indiceMatriculaVehiculo;
+    
+    constructor ( uint256 valor, string memory companyName ) {
         owner = msg.sender;
         valorInicial = valor * 2;
         company = companyName;
@@ -324,7 +334,7 @@ contract MyContract {
         return balances[msg.sender];
     }
     
-    function transferir (address destinatario_, uint256 cantidad_) public {
+    function trasnferir (address destinatario_, uint256 cantidad_) public {
         require(balances[msg.sender] >= cantidad_);
         balances[destinatario_] += cantidad_;
         balances[msg.sender] -= cantidad_;
@@ -351,18 +361,45 @@ contract MyContract {
     //-------------------------------------------------------------
         
     function asignarVehiculo(address address_, string memory matricula_) public {
-        vehiculos[address_].push(matricula_);
+        vehiculosPoseidos[address_].push(matricula_);
     }
     
     function verVehiculos(address address_) public view returns (string[] memory) {
-        return vehiculos[address_];
+        return vehiculosPoseidos[address_];
     }
     
-    function borrarMatriculaEnPosicion(address address_, uint8 idx_) public {
-        delete vehiculos[address_][idx_];
+    function borrarMatriculaEnPosicion(address address_, uint256 idx_) public {
+        delete vehiculosPoseidos[address_][idx_];
     }
     
     //-------------------------------------------------------------
+    
+    function nuevoVehiculo(string memory marca_, uint8 kilometros_, string memory matricula_, uint8 potencia_) public {
+        
+        vehiculos.push(
+            Vehiculo(
+                {
+                    marca: marca_,
+                    kilometros: kilometros_,
+                    matricula: matricula_,
+                    potencia: potencia_
+                }
+            )
+        );
+        
+        indiceMatriculaVehiculo[matricula_] = vehiculos.length - 1;
+    }
+    
+    function actualizaKilometros(uint8 kilometros_, string memory matricula_) public {
+        vehiculos[indiceMatriculaVehiculo[matricula_]].kilometros = kilometros_;
+    }
+    
+    function verKilometros(string memory matricula_) public view returns (uint8) {
+        return vehiculos[indiceMatriculaVehiculo[matricula_]].kilometros;
+    }
+    
+    //-------------------------------------------------------------
+    
     
 }
 ```
