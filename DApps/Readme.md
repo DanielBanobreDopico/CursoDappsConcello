@@ -306,6 +306,8 @@ contract MyContract {
     Vehiculo[] public vehiculos;
     mapping(string => uint256) indiceMatriculaVehiculo;
     
+    event avisoIngreso(address destinatarioIngreso, uint256 cantidad);
+    
     constructor ( uint256 valor, string memory companyName ) {
         owner = msg.sender;
         valorInicial = valor * 2;
@@ -334,10 +336,11 @@ contract MyContract {
         return balances[msg.sender];
     }
     
-    function trasnferir (address destinatario_, uint256 cantidad_) public {
+    function transferir (address destinatario_, uint256 cantidad_) public {
         require(balances[msg.sender] >= cantidad_);
         balances[destinatario_] += cantidad_;
         balances[msg.sender] -= cantidad_;
+        avisoIngreso(destinatario_, cantidad_);
     }
 
     //-------------------------------------------------------------
