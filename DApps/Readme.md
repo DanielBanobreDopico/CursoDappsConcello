@@ -271,6 +271,16 @@ contract MyContract {
 }
 
 ```
+* [Tipos de datos de Solidity](https://docs.soliditylang.org/en/v0.8.0/types.html)
+* [Array, lista en Solidity](https://www.geeksforgeeks.org/solidity-arrays/)
+* [Maps](https://medium.com/upstate-interactive/mappings-in-solidity-explained-in-under-two-minutes-ecba88aff96e)
+#### Notas sobre Arrays y Maps
+La ejecución de smart contracts tiene un coste. Recorrer cada uno de los elementos de un array con muchos elementos puede ser muy costoso.
+
+En Solidity los maps suelen ser emplados para crear índices que nos permitan localizar de forma inmediata información almacenada en un array.
+
+Si solicitamos un valor de un map para una clave que no existe, no responderá con el tipo de valor 'vacío' para ese tipo de dato: false, 0...
+
 Ejemplo:
 ```// SPDX-License-Identifier: UNLISENCED
 
@@ -313,6 +323,12 @@ contract MyContract {
     function miBalance() public view returns(uint256) {
         return balances[msg.sender];
     }
+    
+    function transferir (address destinatario_, uint256 cantidad_) public {
+        require(balances[msg.sender] >= cantidad_);
+        balances[destinatario_] += cantidad_;
+        balances[msg.sender] -= cantidad_;
+    }
 
     //-------------------------------------------------------------
         
@@ -350,12 +366,3 @@ contract MyContract {
     
 }
 ```
-* [Tipos de datos de Solidity](https://docs.soliditylang.org/en/v0.8.0/types.html)
-* [Array, lista en Solidity](https://www.geeksforgeeks.org/solidity-arrays/)
-* [Maps](https://medium.com/upstate-interactive/mappings-in-solidity-explained-in-under-two-minutes-ecba88aff96e)
-#### Notas sobre Arrays y Maps
-La ejecución de smart contracts tiene un coste. Recorrer cada uno de los elementos de un array con muchos elementos puede ser muy costoso.
-
-En Solidity los maps suelen ser emplados para crear índices que nos permitan localizar de forma inmediata información almacenada en un array.
-
-Si solicitamos un valor de un map para una clave que no existe, no responderá con el tipo de valor 'vacío' para ese tipo de dato: false, 0...
