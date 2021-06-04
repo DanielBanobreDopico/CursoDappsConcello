@@ -340,7 +340,7 @@ contract MyContract {
         require(balances[msg.sender] >= cantidad_);
         balances[destinatario_] += cantidad_;
         balances[msg.sender] -= cantidad_;
-        avisoIngreso(destinatario_, cantidad_);
+        emit avisoIngreso(destinatario_, cantidad_);
     }
 
     //-------------------------------------------------------------
