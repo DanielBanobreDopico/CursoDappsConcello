@@ -65,9 +65,9 @@
 ## Firma offline
     * Airgap
     
-## Solidity
+# Solidity
 
-### Esquema del proyecto
+## Esquema del proyecto
 
 ```bash
 npm init -y
@@ -107,7 +107,7 @@ contract StorageName {
 }
 ```
 
-### Compilación del smart contract
+## Compilación del smart contract
 
 Instalamos el módulo necesario.
 
@@ -156,7 +156,7 @@ Podemos descomentar las lineas de console log y ver las salidas ejecutando compi
 ```bash
 node compile.js
 ```
-### Tests
+## Tests
 
 Instalamos los módulos necesarios.
 
@@ -228,7 +228,7 @@ describe('StorageName', () => {
 })
 
 ```
-### Deploy
+## Deploy
 
 Muchos de los módulos necesarios ya han sido instalados para la realización de los tests. Añadimos los faltantes.
 
@@ -243,7 +243,7 @@ Editamos deploy.js
 
 ```
 
-### Apuntes Solidity
+# Apuntes Solidity
 
 * Variables fuertemente tipadas: hemos de decir que tipo de valor almacenamos en cada variable
 * No existe undefined
@@ -274,7 +274,7 @@ contract MyContract {
 * [Tipos de datos de Solidity](https://docs.soliditylang.org/en/v0.8.0/types.html)
 * [Array, lista en Solidity](https://www.geeksforgeeks.org/solidity-arrays/)
 * [Maps](https://medium.com/upstate-interactive/mappings-in-solidity-explained-in-under-two-minutes-ecba88aff96e)
-#### Notas sobre Arrays y Maps
+## Notas sobre Arrays y Maps
 La ejecución de smart contracts tiene un coste. Recorrer cada uno de los elementos de un array con muchos elementos puede ser muy costoso.
 
 En Solidity los maps suelen ser emplados para crear índices que nos permitan localizar de forma inmediata información almacenada en un array.
@@ -407,7 +407,7 @@ contract MyContract {
 }
 ```
 
-### Almacenamientos en Solidity
+## Almacenamientos en Solidity
 
 * Pila
   * No lo explica... menciona algo parecido a las pilas FiFo.
@@ -448,9 +448,8 @@ contract MyContract {
 }
 ```
 
-### Condiciones de ejecución
+## Condiciones de ejecución
 ```solidity
-
 // SPDX-License-Identifier: UNLISENCED
 
 pragma solidity >= 0.8.0;
@@ -497,6 +496,30 @@ contract MyContract {
         assert(address(this).balance < 5 ether);
     }
 }
+```
+## Modifiers
 
+```solidity
+// SPDX-License-Identifier: UNLISENCED
 
+pragma solidity >= 0.8.0;
+
+contract MyContract {
+    address public propietario;
+    uint256 public numero;
+    
+    modifier soloPropietario {
+        require(msg.sender == propietario, "No autorizado");
+        _;
+    }
+    
+    constructor () {
+        propietario = msg.sender;
+        numero = 0;
+    }
+    
+    function incrementaNumero () public soloPropietario {
+        numero ++;
+    }
+}
 ```
