@@ -406,3 +406,97 @@ contract MyContract {
     
 }
 ```
+
+### Almacenamientos en Solidity
+
+* Pila
+  * No lo explica... menciona algo parecido a las pilas FiFo.
+* Memory
+  * Como la memoria RAM. El contenido sólo se almacena durante el procesamiento de la transacción y luego se pierde.
+* Storage
+    * Es a lo que pertenecen las variables de estado del smartcontract. Se lamacenan de forma persistente.
+
+```solidity
+
+// SPDX-License-Identifier: UNLISENCED
+
+pragma solidity >= 0.8.0;
+
+contract MyContract {
+    uint256[] public variableEnEstado;
+    
+    constructor () {
+        variableEnEstado.push(22);
+    }
+
+    function myFunction () public view returns(uint256, uint256) {
+        // Public: puede ser llamada por un wallet, otro smartcontract o de cualquier otra manera por cualquiera.
+        // Asignación por valor al emplear 'memory'.
+        uint256[] memory variableEnFuncion = variableEnEstado;
+        variableEnFuncion[0] = 39;
+        return (variableEnFuncion[0], variableEnEstado[0]);
+    }
+    
+    function myFunction2 () external returns (uint256, uint256) {
+        // External: solo se puede llamar desde un wallet
+        // Asignación por referencia al emplear 'storage'.
+        uint256[] storage variableEnFuncion = variableEnEstado;
+        variableEnFuncion[0] = 39;
+        return (variableEnFuncion[0], variableEnEstado[0]);
+        // Esta function no nos dará la salida directamente en remix. Hemos de buscarla en el campo 'decoded output' de la transacción.
+    }
+}
+```
+
+### Condiciones de ejecución
+```solidity
+
+// SPDX-License-Identifier: UNLISENCED
+
+pragma solidity >= 0.8.0;
+
+contract MyContract {
+    /*
+    throw -> obsoleto
+    require -> si no se cumple la condición, la transacción y cualquier cambio es descartada. El gas es consumido hasta el punto en que el require detiene la ejecución.
+        Orientado a comprobar que los argumentos para una funcion sean adecuados
+    revert -> idem. a require, pero enfocado a errores inprevistos.
+    assert -> Consume la totalidad del gas previsto para la función.
+    */
+    constructor() payable {
+        // payable: permite transferir una cantidad en la transacción, en este caso del despliegue del smartcontract
+        
+    }
+    
+    function handleRequireError() public payable {
+        //Almacena true/false dependiendo de si en la llamada a la función se transfieren 1 o más wei.
+        bool error = msg.value >= 1 ether;
+        require(error, 'Error tipo require: no has trasnferido uno o mas Ethers');
+    }
+    
+    function handleRequireError2() public payable {
+        bool error = msg.value >= 5 ether;
+        require(error, 'Error de tipo require2: no has trasnferido cinco o mas Ethers');
+    }
+    
+    function handlerReverseError() public view {
+        // El método address obtiene una dirección del objeto del argumento. This es el contrato. address.balance es el balance del la dirección
+        if (address(this).balance > 2 ether) {
+            revert('Error tipo revert: El smartcontract acumula mas de 2 Ethers');
+        }
+    }
+    
+    function handlerReverseError2() public view {
+        // El método address obtiene una dirección del objeto del argumento. This es el contrato. address.balance es el balance del la dirección
+        if (address(this).balance < 5 ether) {
+            revert('Error tipo revert: El smartcontract acumula mas de 5 Ethers');
+        }
+    }
+    
+    function assertError() public view {
+        assert(address(this).balance < 5 ether);
+    }
+}
+
+
+```
