@@ -523,3 +523,51 @@ contract MyContract {
     }
 }
 ```
+
+## Detener contrato
+
+```solidity
+// SPDX-License-Identifier: UNLISENCED
+
+pragma solidity >= 0.8.0;
+
+contract MyContract {
+    address public propietario;
+    string public txt = "Texto de prueba";
+    bool activo = true;
+    
+    modifier soloPropietario {
+        require(msg.sender == propietario, 'No autorizado');
+        _;
+    }
+    
+    modifier siActivo {
+        require(activo, 'Contrato desactivado');
+        _;
+    }
+    
+    constructor () payable {
+        propietario = msg.sender;
+    }
+    
+    function balances() public view siActivo returns (uint256, uint256){
+        return(msg.sender.balance,address(this).balance);
+    }
+    
+    function borrarContrato() public soloPropietario siActivo {
+        //Destruye el contrato y envía el balance al address especificado;
+        //selfdestruct(propietario);
+        selfdestruct(payable(msg.sender));
+    }
+    
+    function conmutaActivo () public soloPropietario {
+        activo = ! activo;
+    }
+    
+    function liquidar () public soloPropietario siActivo {
+        activo = false;
+        payable(msg.sender).transfer(address(this).balance);
+    }
+    
+}
+```
