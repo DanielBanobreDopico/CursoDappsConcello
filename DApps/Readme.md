@@ -663,4 +663,28 @@ contract MyContract {
 
 ## Librerías de Solidity
 
-Son smartcontracts que no guardan variables de estado ni tienen funciones payables. Están pensadas para proporcionar funciones a otros smartcontracts. Nos permiten reutilizar el trabajo, entre otras cosas.
+Son smartcontracts que no guardan variables de estado ni tienen funciones payables, ni fallback, ni selfdestruct. Están pensadas para proporcionar funciones a otros smartcontracts. Nos permiten reutilizar el trabajo, entre otras cosas. Pueden emplear structs y enums.
+
+```solidity
+// SPDX-License-Identifier: UNLISENCED
+
+pragma solidity >= 0.8.0;
+
+library L {
+    // Una función con función públic en una librería se desplegará como un contrato independiente disponible para otros contratos.
+    function returnAddress() public view returns (address) {
+        return address(this);
+    }
+    // Una función de tipo internal en una librería se incrustará internamente en el contrato en la compilación y sólo estará disponible para el.
+    function anotherReturnAddress() internal view returns (address) {
+        return address(this);
+    }
+}
+
+contract MyContract {
+    function a() public view returns (address) {
+        address myAddress_ = L.returnAddress();
+        return myAddress_;
+    }
+}
+```
