@@ -613,3 +613,54 @@ Añade 200 votos a una dirección. Si le incrementas 56 votos más, la dejarás 
 Por otra parte si le decrementas un voto a una dirección sin votos, tendrá el numero máximo de votos.
 */
 ```
+En su momento, se solucionaba el problema anterior de la siguiente manera:
+ ```solidity
+ // SPDX-License-Identifier: UNLISENCED
+
+/*
+Recreamos una librería de Openzeppelin para solucionar el problema de desbordamiento.
+*/
+
+pragma solidity >= 0.5.0;
+
+library SafeMath8 {
+    
+    /*
+    internal -> Puede ser usado sólo por este contrato y sus contratos derivados
+    pure -> No emplea datos externos a la función más allá de los parámetros proporcionados entre los paréntesis.
+    */
+    
+    function add(uint8 a_, uint8 b_) internal pure returns (uint8) {
+        uint8 c_ = a_ + b_;
+        require( c_ >= a_ && c_ >= b_, 'Error de desbordamiento');
+        return c_;
+    }
+    
+    function subs(uint8 a_, uint8 b_) internal pure returns (uint8) {
+        require( b_ <= a_ , 'Error de desbordamiento');
+        return a_ - b_;
+    }
+    
+}
+
+
+contract MyContract {
+    // uint8 -> desde 0 a 255
+    mapping(address=>uint8) public candidatos;
+    
+    using SafeMath8 for uint8;
+    
+    function agregarVotos(address address_, uint8 votos_) public {
+        candidatos[address_] = candidatos[address_].add(votos_);
+    }
+    
+    function quitarVotos(address address_, uint8 votos_) public {
+        candidatos[address_] = candidatos[address_].subs(votos_);
+    }
+}
+
+ ```
+
+## Librerías de Solidity
+
+Son smartcontracts que no guardan variables de estado ni tienen funciones payables. Están pensadas para proporcionar funciones a otros smartcontracts. Nos permiten reutilizar el trabajo, entre otras cosas.
