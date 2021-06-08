@@ -690,3 +690,29 @@ contract MyContract {
 ```
 ## Desarrollo modular de smartcontracts
 https://medium.com/quillhash/how-to-write-upgradable-smart-contracts-in-solidity-d8f1b95a0e9a
+
+## Subcontratos, contratos hijo.
+
+```solidity
+// SPDX-License-Identifier: UNLISENCED
+
+pragma solidity >= 0.8.0;
+
+contract SubContract {
+    address public owner;
+    
+    constructor (address address_) {
+        owner = address_;
+    }
+    
+}
+
+contract Factory {
+    mapping(address => address) public subcontracts;
+    
+    function createSubcontract() public {
+        SubContract newContract = new SubContract(msg.sender);
+        subcontracts[msg.sender] = address(newContract);
+    }
+}
+```
