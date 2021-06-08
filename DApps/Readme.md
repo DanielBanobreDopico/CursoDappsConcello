@@ -688,3 +688,5 @@ contract MyContract {
     }
 }
 ```
+## Desarrollo modular de smartcontracts
+https://medium.com/quillhash/how-to-write-upgradable-smart-contracts-in-solidity-d8f1b95a0e9a
