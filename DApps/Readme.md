@@ -571,3 +571,45 @@ contract MyContract {
     
 }
 ```
+
+### Ataques a Solidity
+
+## Desbordamiento o *overflow*
+
+```solidity
+// SPDX-License-Identifier: UNLISENCED
+
+/*
+Openzeppelin produce librerías para Solidity que nos pueden ayudar a trabajar con seguridad.
+https://docs.openzeppelin.com/openzeppelin/
+*/
+
+/*
+En este ejemplo exploramos un ataque de desbordamiento (overflow).
+Estos ataques aprovechan la circunstancia de que las variables de enteros tienen un valor máximo que pueden almacenar.
+Cuando intentamos almacenar un valor por encima de ese rango, lo que se almacena es el restante por encima de ese rango.
+El comportamiento es similar a una operación de módulo.
+También lo podemos entender como añadir 2 horas a un reloj que está a las 23:00. No estará en las 25:00 sino en las 01:00.
+*/
+
+// Usamos 0.5.0 porque en versiones anteriores el problema explorado en este ejemplo ha sido solucionado.
+pragma solidity >= 0.5.0;
+
+contract MyContract {
+    // uint8 -> desde 0 a 255
+    mapping(address=>uint8) public candidatos;
+    
+    function agregarVotos(address address_, uint8 votos_) public {
+        candidatos[address_] += votos_;
+    }
+    
+    function quitarVotos(address address_, uint8 votos_) public {
+        candidatos[address_] -= votos_;
+    }
+}
+
+/*
+Añade 200 votos a una dirección. Si le incrementas 56 votos más, la dejarás sin votos.
+Por otra parte si le decrementas un voto a una dirección sin votos, tendrá el numero máximo de votos.
+*/
+```
